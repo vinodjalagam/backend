@@ -27,8 +27,8 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t $DOCKER_USERNAME/my-node-app2:latest .
-          docker push $DOCKER_USERNAME/my-node-app2:latest
+          docker build -t $DOCKER_USERNAME/my-node-app3:latest .
+          docker push $DOCKER_USERNAME/my-node-app3:latest
 
       - name: Add SSH host key
         run: |
@@ -40,10 +40,11 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
-          DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/my-node-app2:latest
+          DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/my-node-app3:latest
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
+          docker images
           echo "DOCKER_IMAGE: $DOCKER_IMAGE"
           echo "HOST: $HOST"
           echo "USERNAME: $USERNAME"
@@ -51,10 +52,10 @@ jobs:
             echo "Checking Docker containers..."
             docker ps -a
             echo "Pulling Docker image $DOCKER_IMAGE"
-            docker pull $DOCKER_IMAGE
-            echo "Stopping and removing old container..."
-            docker stop node-app-blue || true
-            docker rm node-app-blue || true
+            docker pull $DOCKER_IMAGE 
+            # echo "Stopping and removing old container..."
+            # docker stop node-app-blue || true
+            # docker rm node-app-blue || true
             echo "Running new container..."
             docker run -d --name node-app-blue -p 8081:3000 $DOCKER_IMAGE
             docker ps -a
