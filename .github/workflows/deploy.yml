@@ -19,8 +19,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-node-app1:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-node-app1:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-node-app2:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-node-app2:latest
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
@@ -44,8 +44,8 @@ jobs:
             docker --version
             docker ps -a
 
-            echo "Pulling Docker image $DOCKER_IMAGE"
-            docker pull $DOCKER_IMAGE
+            echo "Pulling Docker image \$DOCKER_IMAGE"
+            docker pull \$DOCKER_IMAGE
             
             docker run -d --name node-app1 -p 80:3000 $DOCKER_IMAGE
           EOF
