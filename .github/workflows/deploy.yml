@@ -37,7 +37,6 @@ jobs:
 
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
             docker pull $DOCKER_IMAGE
-            docker stop node-app1 || true
-            docker rm node-app1 || true
+            
             docker run -d --name node-app1 -p 80:3000 $DOCKER_IMAGE
           EOF
