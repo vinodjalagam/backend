@@ -1,41 +1,67 @@
-name: Node.js CI
+---
+name: Deploy to VM
 on:
   push:
     branches:
       - main
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version:
-          - 16.x
-          - 18.x
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
+          node-version: "14"
       - name: Install dependencies
         run: npm install
+      - name: Add SSH host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan ${{ secrets.SSH_HOST_1 }} >> ~/.ssh/known_hosts
       - name: Deploy to VM
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          ssh -i private_key -o StrictHostKeyChecking=no $USERNAME@$HOST << 
-          'EOF'
-            cd /home/ubuntu/backend
-            git pull origin master
-            npm install
-            run: npm ci
-            run: install express
-            run: npm run build --if-present
-            sudo pm2 restart backend
-            sudo pm2 start index.js
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY_1 }}
+          SSH_HOST_1: ${{ secrets.SSH_HOST_1 }}
+          SSH_USERNAME_1: ${{ secrets.SSH_USERNAME_1 }}
+        run: >
+          echo "$SSH_PRIVATE_KEY_1" > private_key.pem
+
+          chmod 600 private_key.pem
+
+
+          # Ensure the directory exists
+
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "mkdir -p /home/$SSH_USERNAME_1/backend-1"
+
+
+          # Copy files to the VM
+
+          scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:/home/$SSH_USERNAME_1/backend-1/
+
+
+          # Run commands on the VM
+
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+        
+            cd /home/$SSH_USERNAME_1/backend-1
+            sudo apt install npm -y
+            sudo npm install -g pm2 -y
+            # Ensure the package.json file is present
+            if [ -f package.json ]; then
+              npm install
+            else
+              echo "package.json not found!"
+              exit 1
+            fi
+
+            # Check if index.js exists
+            if [ -f index.js ]; then
+              pm2 start index.js --name backend-1
+            else
+              echo "index.js not found!"
+              exit 1
+            fi
           EOF
+     
