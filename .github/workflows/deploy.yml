@@ -19,33 +19,33 @@ jobs:
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan ${{ secrets.SSH_HOST_1 }} >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
       - name: Deploy to VM
         env:
-          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY_1 }}
-          SSH_HOST_1: ${{ secrets.SSH_HOST_1 }}
-          SSH_USERNAME_1: ${{ secrets.SSH_USERNAME_1 }}
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST_1: ${{ secrets.HOST }}
+          SSH_USERNAME_1: ${{ secrets.USERNAME }}
         run: >
-          echo "$SSH_PRIVATE_KEY_1" > private_key.pem
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
 
           chmod 600 private_key.pem
 
 
           # Ensure the directory exists
 
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "mkdir -p /home/$SSH_USERNAME_1/backend-1"
+          ssh -i private_key.pem $USERNAME@$HOST "mkdir -p /home/$USERNAME/backend-1"
 
 
           # Copy files to the VM
 
-          scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:/home/$SSH_USERNAME_1/backend-1/
+          scp -i private_key.pem -r ./* $USERNAME@$HOST:/home/$USERNAME/backend-1/
 
 
           # Run commands on the VM
 
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+          ssh -i private_key.pem $USERNAME@$HOST << EOF
         
-            cd /home/$SSH_USERNAME_1/backend-1
+            cd /home/$USERNAME/backend-1
             sudo apt install npm -y
             sudo npm install -g pm2 -y
             # Ensure the package.json file is present
