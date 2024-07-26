@@ -34,8 +34,17 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-
+          
+          # Debugging: Print environment variables
+          echo "DOCKER_IMAGE: $DOCKER_IMAGE"
+          echo "HOST: $HOST"
+          echo "USERNAME: $USERNAME"
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
+          # Debugging: Print Docker version and existing containers
+            docker --version
+            docker ps -a
+
+            echo "Pulling Docker image $DOCKER_IMAGE"
             docker pull $DOCKER_IMAGE
             
             docker run -d --name node-app1 -p 80:3000 $DOCKER_IMAGE
