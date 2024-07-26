@@ -1,56 +1,31 @@
-name: Deploy to VM using Docker
-
+---
+name: Deploy API
 on:
   push:
     branches:
       - main
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Check out code
         uses: actions/checkout@v2
-
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to Docker Hub
+        uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Build and push Docker image
-        id: docker_build
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest
-
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-
-      - name: Initial setup on VM
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
-          # SSH into the VM and set up Docker
-          ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
-            sudo apt-get update
-            sudo apt-get install -y docker.io
-            sudo systemctl start docker
-            sudo systemctl enable docker
-          EOF
-
-      - name: Deploy Docker container to VM
+      - name: Deploy to VM
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
@@ -60,42 +35,9 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
 
-          # SSH into the VM and deploy the Docker container
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
             docker pull $DOCKER_IMAGE
-
-            docker run -d --name node-app -p 8000:8000 $DOCKER_IMAGE
-            echo "Checking application health on port 8000..."
-            curl -f http://localhost:8000/sayHello
-
-          #   # Determine the current environment and switch to the other
-          #   if docker ps --filter "name=node-app-blue" --format "{{.Names}}" | grep -q "node-app-blue"; then
-          #     CURRENT_ENV=node-app-blue
-          #     NEW_ENV=node-app-green
-          #     NEW_PORT=8000
-          #   else
-          #     CURRENT_ENV=node-app-green
-          #     NEW_ENV=node-app-blue
-          #     NEW_PORT=8000
-          #   fi
-
-          #   # Start the new environment
-          #   docker run -d --name $NEW_ENV -p $NEW_PORT:8000 $DOCKER_IMAGE
-
-          #   # Allow some time for the new environment to be fully up
-          #   sleep 10
-
-          #   # Perform a health check on the new environment
-          #   if curl -f http://localhost:$NEW_PORT/health; then
-          #     echo "New version is healthy, switching traffic."
-
-          #     # Stop the old environment
-          #     docker stop $CURRENT_ENV
-          #     docker rm $CURRENT_ENV
-          #   else
-          #     echo "New version is not healthy, keeping current version."
-          #     docker stop $NEW_ENV
-          #     docker rm $NEW_ENV
-          #     exit 1
-          #   fi
+            docker stop node-app || true
+            docker rm node-app || true
+            docker run -d --name node-app -p 80:3000 $DOCKER_IMAGE
            EOF
