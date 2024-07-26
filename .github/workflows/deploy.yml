@@ -52,12 +52,13 @@ jobs:
             echo "Checking Docker containers..."
             docker ps -a
             echo "Pulling Docker image $DOCKER_IMAGE"
-            docker pull $DOCKER_IMAGE 
+            # docker pull $DOCKER_IMAGE 
+            docker pull vinodjalagam/my-node-app3
             # echo "Stopping and removing old container..."
             # docker stop node-app-blue || true
             # docker rm node-app-blue || true
             echo "Running new container..."
-            docker run -d --name node-app-blue -p 8081:3000 $DOCKER_IMAGE
+            docker run -d --name node-app-blue -p 8081:3000 vinodjalagam/my-node-app3
             docker ps -a
             docker logs node-app-blue
           EOF
