@@ -64,34 +64,38 @@ jobs:
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
             docker pull $DOCKER_IMAGE
 
-            # Determine the current environment and switch to the other
-            if docker ps --filter "name=node-app-blue" --format "{{.Names}}" | grep -q "node-app-blue"; then
-              CURRENT_ENV=node-app-blue
-              NEW_ENV=node-app-green
-              NEW_PORT=8000
-            else
-              CURRENT_ENV=node-app-green
-              NEW_ENV=node-app-blue
-              NEW_PORT=8000
-            fi
+            docker run -d --name node-app -p 8000:8000 $DOCKER_IMAGE
+            echo "Checking application health on port 8000..."
+            curl -f http://localhost:8000/sayHello
 
-            # Start the new environment
-            docker run -d --name $NEW_ENV -p $NEW_PORT:8000 $DOCKER_IMAGE
+          #   # Determine the current environment and switch to the other
+          #   if docker ps --filter "name=node-app-blue" --format "{{.Names}}" | grep -q "node-app-blue"; then
+          #     CURRENT_ENV=node-app-blue
+          #     NEW_ENV=node-app-green
+          #     NEW_PORT=8000
+          #   else
+          #     CURRENT_ENV=node-app-green
+          #     NEW_ENV=node-app-blue
+          #     NEW_PORT=8000
+          #   fi
 
-            # Allow some time for the new environment to be fully up
-            sleep 10
+          #   # Start the new environment
+          #   docker run -d --name $NEW_ENV -p $NEW_PORT:8000 $DOCKER_IMAGE
 
-            # Perform a health check on the new environment
-            if curl -f http://localhost:$NEW_PORT/health; then
-              echo "New version is healthy, switching traffic."
+          #   # Allow some time for the new environment to be fully up
+          #   sleep 10
 
-              # Stop the old environment
-              docker stop $CURRENT_ENV
-              docker rm $CURRENT_ENV
-            else
-              echo "New version is not healthy, keeping current version."
-              docker stop $NEW_ENV
-              docker rm $NEW_ENV
-              exit 1
-            fi
-          EOF
+          #   # Perform a health check on the new environment
+          #   if curl -f http://localhost:$NEW_PORT/health; then
+          #     echo "New version is healthy, switching traffic."
+
+          #     # Stop the old environment
+          #     docker stop $CURRENT_ENV
+          #     docker rm $CURRENT_ENV
+          #   else
+          #     echo "New version is not healthy, keeping current version."
+          #     docker stop $NEW_ENV
+          #     docker rm $NEW_ENV
+          #     exit 1
+          #   fi
+           EOF
