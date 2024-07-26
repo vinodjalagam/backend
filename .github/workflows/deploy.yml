@@ -39,5 +39,5 @@ jobs:
             docker pull $DOCKER_IMAGE
             docker stop node-app || true
             docker rm node-app || true
-            docker run -d --name node-app -p 80:3000 $DOCKER_IMAGE
+            docker run -d --name node-app -p 80:80 $DOCKER_IMAGE
            EOF
