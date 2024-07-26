@@ -72,7 +72,7 @@ jobs:
             else
               CURRENT_ENV=node-app-green
               NEW_ENV=node-app-blue
-              NEW_PORT=800
+              NEW_PORT=8000
             fi
 
             # Start the new environment
