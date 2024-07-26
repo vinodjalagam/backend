@@ -68,15 +68,15 @@ jobs:
             if docker ps --filter "name=node-app-blue" --format "{{.Names}}" | grep -q "node-app-blue"; then
               CURRENT_ENV=node-app-blue
               NEW_ENV=node-app-green
-              NEW_PORT=3001
+              NEW_PORT=80
             else
               CURRENT_ENV=node-app-green
               NEW_ENV=node-app-blue
-              NEW_PORT=3000
+              NEW_PORT=80
             fi
 
             # Start the new environment
-            docker run -d --name $NEW_ENV -p $NEW_PORT:3000 $DOCKER_IMAGE
+            docker run -d --name $NEW_ENV -p $NEW_PORT:80 $DOCKER_IMAGE
 
             # Allow some time for the new environment to be fully up
             sleep 10
