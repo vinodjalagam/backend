@@ -39,8 +39,8 @@ jobs:
           chmod 600 private_key.pem
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
             docker pull $DOCKER_IMAGE
-            docker stop node-app-blue || true
-            docker rm node-app-blue || true
+            # docker stop node-app-blue || true
+            # docker rm node-app-blue || true
             docker run -d --name node-app-blue -p 8081:3000 $DOCKER_IMAGE
           EOF
       - name: Wait for Blue to be ready
@@ -72,6 +72,6 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
-            docker stop node-app-green || true
-            docker rm node-app-green || true
+            # docker stop node-app-green || true
+            # docker rm node-app-green || true
           EOF
