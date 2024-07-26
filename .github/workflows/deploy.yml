@@ -46,6 +46,7 @@ jobs:
           ssh -i private_key.pem $USERNAME@$HOST << EOF
         
             cd /home/$USERNAME/backend-1
+            sudo apt-get update -y
             sudo apt install npm -y
             sudo npm install -g pm2 -y
             # Ensure the package.json file is present
