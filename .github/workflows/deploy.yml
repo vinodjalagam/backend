@@ -43,7 +43,7 @@ jobs:
           chmod 600 private_key.pem
 
           # SSH into the VM and set up Docker
-          ssh -i private_key.pem $USERNAME@$SSH << 'EOF'
+          ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
             sudo apt-get update
             sudo apt-get install -y docker.io
             sudo systemctl start docker
