@@ -19,8 +19,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-node-app1:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-node-app1:latest
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
@@ -30,14 +30,14 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
-          DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest
+          DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/my-node-app1:latest
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
 
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
             docker pull $DOCKER_IMAGE
-            docker stop node-app || true
-            docker rm node-app || true
-            docker run -d --name node-app -p 80:80 $DOCKER_IMAGE
+            docker stop node-app1 || true
+            docker rm node-app1 || true
+            docker run -d --name node-app -p 80:3000 $DOCKER_IMAGE
            EOF
