@@ -1,5 +1,5 @@
 ---
-name: Blue-Green Deployment with Docker
+name: Blue-Green Deployment
 on:
   push:
     branches:
@@ -10,89 +10,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and Push Docker Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-blue:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/backend-blue:latest
+          node-version: "14"
+      - name: Install dependencies
+        run: npm install
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-      - name: Deploy to Blue Environment
+          ssh-keyscan ${{ secrets.SSH_HOST_1 }} >> ~/.ssh/known_hosts
+      - name: Deploy to VM
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        run: >
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-
-          chmod 600 private_key.pem
-
-          # Ensure the directory exists
-
-          ssh -i private_key.pem $USERNAME@$HOST "mkdir -p /home/$USERNAME/backend-blue"
-
-          # Copy files to the VM
-
-          scp -i private_key.pem -r ./* $USERNAME@$HOST:/home/$USERNAME/backend-blue/
-
-          # Run commands on the VM
-
-          ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
-            cd /home/$USERNAME/backend-blue
-            sudo apt update
-            sudo apt install docker.io -y
-            sudo usermod -aG docker $USERNAME
-            # Ensure the Docker group change takes effect
-           sudo su -
-              docker pull $DOCKER_USERNAME/backend-blue:latest
-              docker stop backend-blue || true
-              docker rm backend-blue || true
-              docker run -d --name backend-blue -p 8085:8085 $DOCKER_USERNAME/backend-blue:latest
-            
-          EOF
-      - name: Verify Blue Environment
-        run: curl --fail http://${{ secrets.HOST }}:8085/sayHello
-      - name: Switch Traffic to Blue Environment
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          USERNAME: ${{ secrets.USERNAME }}
-          HOST: ${{ secrets.HOST }}
-        run: >
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-
-          chmod 600 private_key.pem
-
-          # Upload Nginx configuration
-
-          scp -i private_key.pem nginx-blue.conf $USERNAME@$HOST:/tmp/nginx-blue.conf
-
-          # Apply Nginx configuration
-
-          ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
-            sudo mv /tmp/nginx-blue.conf /etc/nginx/sites-available/default
-            sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-            sudo nginx -t
-            sudo systemctl reload nginx
-          EOF
-      - name: Clean Up Green Environment
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY_1 }}
+          SSH_HOST_1: ${{ secrets.HOST }}
+          SSH_USERNAME_1: ${{ secrets.USERNAME }}
         run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          echo "$SSH_PRIVATE_KEY_1" > private_key.pem
           chmod 600 private_key.pem
-          # Shut down the green environment
-          ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
-            docker stop backend-green || true
-            docker rm backend-green || true
-          EOF
