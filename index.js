@@ -3,11 +3,11 @@ const app = express();
 
 // Route: /sayHello
 app.get('/sayHello', (req, res) => {
-    res.json({ message: 'Hello vinod ' });
+    res.json({ message: 'Hello vinod kumar ' });
 });
 
 // Start the server
-const PORT = process.env.PORT || 8085;
+const PORT = process.env.PORT || 8086;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
