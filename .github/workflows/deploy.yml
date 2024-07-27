@@ -22,7 +22,7 @@ jobs:
           ssh-keyscan ${{ secrets.SSH_HOST_1 }} >> ~/.ssh/known_hosts
       - name: Deploy to VM
         env:
-          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY_1 }}
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST_1: ${{ secrets.HOST }}
           SSH_USERNAME_1: ${{ secrets.USERNAME }}
         run: |
