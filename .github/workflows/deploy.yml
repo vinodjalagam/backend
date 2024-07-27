@@ -20,9 +20,9 @@ jobs:
           # sudo apt-get update
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
-          docker build -t $DOCKER_USERNAME/my-node-app:latest .
+          docker build -t  vinodjalagam/my-node-app4:latest .
 
-          docker push $DOCKER_USERNAME/my-node-app:latest
+          docker push  vinodjalagam/my-node-app4:latest
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
@@ -32,7 +32,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
-          DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/my-node-app:latest
+          DOCKER_IMAGE: vinodjalagam/my-node-app4:latest
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
