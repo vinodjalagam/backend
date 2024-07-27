@@ -50,6 +50,8 @@ jobs:
             cd /home/$USERNAME/backend-blue
             sudo apt update
             sudo apt install docker.io -y
+            sudo usermod -aG docker $USERNAME
+            newgrp docker
             docker pull $DOCKER_USERNAME/backend-blue:latest
             docker stop backend-blue || true
             docker rm backend-blue || true
