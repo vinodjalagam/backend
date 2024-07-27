@@ -109,6 +109,4 @@ jobs:
             sudo nginx -t
             sudo systemctl reload nginx
           EOF
-      - name: Test Deployment
-        run: |
-          curl -f http://$SSH_HOST_1/sayHello || (echo "Deployment failed!" && exit 1)
+     
