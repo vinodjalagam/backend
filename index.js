@@ -3,7 +3,7 @@ const app = express();
 
 // Route: /sayHello
 app.get('/sayHello', (req, res) => {
-    res.json({ message: 'Hello vinod goud' });
+    res.json({ message: 'Hello User' });
 });
 
 // Start the server
