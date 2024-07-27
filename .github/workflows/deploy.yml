@@ -58,7 +58,7 @@ jobs:
               docker rm backend-blue || true
               docker run -d --name backend-blue -p 8085:8085 $DOCKER_USERNAME/backend-blue:latest
             '
-           EOF
+          EOF
       - name: Verify Blue Environment
         run: curl --fail http://${{ secrets.HOST }}:8085/sayHello
       - name: Switch Traffic to Blue Environment
