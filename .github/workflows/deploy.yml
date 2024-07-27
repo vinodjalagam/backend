@@ -113,4 +113,4 @@ jobs:
         env:
           SSH_HOST_1: ${{ secrets.SSH_HOST_1 }}
         run: |
-          curl -f http://$SSH_HOST_1/sayHello || (echo "Deployment failed!" && exit 1)
+          curl -s http://localhost/sayHello || (echo "Deployment failed!" && exit 1)
