@@ -82,6 +82,7 @@ jobs:
           else
             NEW_ENV="blue"
           fi
+          echo "Active environment: $NEW_ENV"
 
           # # Upload Nginx configuration 
           # scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
