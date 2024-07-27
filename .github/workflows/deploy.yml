@@ -117,7 +117,7 @@ jobs:
             export ACTIVE_ENV=$NEW_ENV
             envsubst '${ACTIVE_ENV}' < /tmp/nginx.conf > /etc/nginx/sites-available/default
             # sudo sed -i "s|backend-\(blue\|green\)|backend-$NEW_ENV|g" /tmp/nginx.conf
-            sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
+            # sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
             sudo nginx -t
             sudo systemctl reload nginx
