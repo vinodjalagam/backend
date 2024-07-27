@@ -73,17 +73,20 @@ jobs:
 
           chmod 600 private_key.pem
 
-           ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
 
-          # Determine non-active environment if [ "$ACTIVE_ENV" == "blue" ]; then
+          # Determine non-active environment 
+          if [ "$ACTIVE_ENV" == "blue" ]; then
             NEW_ENV="green"
           else
             NEW_ENV="blue"
           fi
 
-          # Upload Nginx configuration scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
+          # Upload Nginx configuration 
+          scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
 
-          # Apply Nginx configuration ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+          # Apply Nginx configuration 
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
             sudo sed -i "s|backend-active|backend-$NEW_ENV|g" /tmp/nginx.conf
             sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
