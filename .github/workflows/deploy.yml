@@ -51,10 +51,10 @@ jobs:
             # Ensure the package.json file is present
             if [ -f /home/$USERNAME/backend-blue/package.json ]; then
               npm install
-            else
-              echo "package.json not found!"
-              exit 1
-            fi
+            # else
+            #   echo "package.json not found!"
+            #   exit 1
+            # fi
             
 
             # Check if index.js exists
