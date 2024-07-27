@@ -10,6 +10,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-blue:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/backend-blue:latest
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
@@ -19,6 +30,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: >
           echo "$SSH_PRIVATE_KEY" > private_key.pem
 
@@ -38,10 +50,10 @@ jobs:
             cd /home/$USERNAME/backend-blue
             sudo apt update
             sudo apt install docker.io -y
-            sudo docker build -t backend-blue .
-            sudo docker stop backend-blue || true
-            sudo docker rm backend-blue || true
-            sudo docker run -d --name backend-blue -p 8085:8085 backend-blue
+            docker pull $DOCKER_USERNAME/backend-blue:latest
+            docker stop backend-blue || true
+            docker rm backend-blue || true
+            docker run -d --name backend-blue -p 8085:8085 -v $(pwd):/app -w /app $DOCKER_USERNAME/backend-blue:latest
           EOF
       - name: Verify Blue Environment
         run: curl --fail http://${{ secrets.HOST }}:8085/sayHello
@@ -77,6 +89,6 @@ jobs:
           chmod 600 private_key.pem
           # Shut down the green environment
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
-            sudo docker stop backend-green || true
-            sudo docker rm backend-green || true
+            docker stop backend-green || true
+            docker rm backend-green || true
           EOF
