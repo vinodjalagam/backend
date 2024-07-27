@@ -46,8 +46,11 @@ jobs:
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
             cd /home/$USERNAME/backend-blue
             sudo apt update
+            
             sudo apt install npm -y
             sudo npm install -g pm2
+            npm init
+
             # Ensure the package.json file is present
             if [ -f /home/$USERNAME/backend-blue/package.json ]; then
               npm install
