@@ -84,7 +84,7 @@ jobs:
 
           ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
 
-          echo "ACTIVE_ENV=$ACTIVE_ENV" >> $GITHUB_ENV
+          # echo "ACTIVE_ENV=$ACTIVE_ENV" >> $GITHUB_ENV
 
           echo "Active environment: $ACTIVE_ENV"
 
@@ -97,6 +97,8 @@ jobs:
 
           echo "Switching to: $NEW_ENV"
 
+          envsubst '${NEW_ENV}' < default.template > /tmp/default.template
+
           # ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'ls -l /home/$SSH_USERNAME_1/backend-blue'
 
 
@@ -104,10 +106,10 @@ jobs:
 
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
-            export ACTIVE_ENV=$NEW_ENV
-            envsubst '\$ACTIVE_ENV'  /tmp/default.template > /etc/nginx/sites-available/default
-            sed -i 's/\$ACTIVE_ENV/$NEW_ENV/g' /tmp/default.template
-            sudo cp /tmp/default.template /etc/nginx/sites-available/default
+            # export ACTIVE_ENV=$NEW_ENV
+            # envsubst '\$ACTIVE_ENV'  /tmp/default.template > /etc/nginx/sites-available/default
+            # sed -i 's/\$ACTIVE_ENV/$NEW_ENV/g' /tmp/default.template
+            # sudo cp /tmp/default.template /etc/nginx/sites-available/default
 
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
             sudo nginx -t
