@@ -28,3 +28,5 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
           chmod 600 private_key.pem
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
+
