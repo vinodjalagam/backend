@@ -112,7 +112,7 @@ jobs:
             
             # envsubst '\$ACTIVE_ENV'  /tmp/default.template > /etc/nginx/sites-available/default
             # sed -i 's/\$ACTIVE_ENV/$NEW_ENV/g' /tmp/default.template
-            # sudo cp /tmp/default.template /etc/nginx/sites-available/default
+            sudo cp /tmp/default.template /etc/nginx/sites-available/default
 
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
             sudo nginx -t
