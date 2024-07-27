@@ -56,5 +56,13 @@ jobs:
               exit 1
             fi
           EOF
+      - name: Configure Nginx
+        env:
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY_1 }}
+          SSH_USERNAME_1: ${{ secrets.SSH_USERNAME_1 }}
+          SSH_HOST_1: ${{ secrets.SSH_HOST_1 }}
+        run: |
+          echo "$SSH_PRIVATE_KEY_1" > private_key.pem
+          chmod 600 private_key.pem
 
 
