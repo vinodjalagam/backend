@@ -59,14 +59,14 @@ jobs:
 
             # Check if index.js exists
             if [ -f index.js ]; then
-              pm2 start index.js --name backend-blue --port 8081
+              pm2 start index.js --name backend-blue --port 8085
             else
               echo "index.js not found!"
               exit 1
             fi
           EOF
       - name: Verify Blue Environment
-        run: curl --fail http://${{ secrets.HOST }}:8081/sayHello
+        run: curl --fail http://${{ secrets.HOST }}:8085/sayHello
       - name: Switch Traffic to Blue Environment
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
