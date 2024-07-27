@@ -37,6 +37,24 @@ jobs:
           fi
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "mkdir -p /home/$SSH_USERNAME_1/backend-$DEPLOY_ENV"
           scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:/home/$SSH_USERNAME_1/backend-$DEPLOY_ENV/
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+            cd /home/$SSH_USERNAME_1/backend-$DEPLOY_ENV
+            sudo apt update
+            sudo apt install npm -y
+            sudo npm install -g pm2 -y
+            if [ -f package.json ]; then
+              npm install
+            else
+              echo "package.json not found!"
+              exit 1
+            fi
+            if [ -f index.js ]; then
+              pm2 stop backend-$DEPLOY_ENV || true
+              pm2 start index.js --name backend-$DEPLOY_ENV --watch
+            else
+              echo "index.js not found!"
+              exit 1
+            fi
+          EOF
 
 
