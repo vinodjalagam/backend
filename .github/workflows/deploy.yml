@@ -52,12 +52,12 @@ jobs:
             sudo apt install docker.io -y
             sudo usermod -aG docker $USERNAME
             # Ensure the Docker group change takes effect
-           sudo su - $USERNAME -c '
+           sudo su -
               docker pull $DOCKER_USERNAME/backend-blue:latest
               docker stop backend-blue || true
               docker rm backend-blue || true
               docker run -d --name backend-blue -p 8085:8085 $DOCKER_USERNAME/backend-blue:latest
-            '
+            
           EOF
       - name: Verify Blue Environment
         run: curl --fail http://${{ secrets.HOST }}:8085/sayHello
