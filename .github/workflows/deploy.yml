@@ -25,18 +25,25 @@ jobs:
           SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST_1: ${{ secrets.HOST }}
           SSH_USERNAME_1: ${{ secrets.USERNAME }}
-        run: |
+        run: >
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
+
           chmod 600 private_key.pem
+
           ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
+
           # Determine non-active environment
+
           if [ "$ACTIVE_ENV" == "blue" ]; then
             DEPLOY_ENV="green"
           else
             DEPLOY_ENV="blue"
           fi
+
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "mkdir -p /home/$SSH_USERNAME_1/backend-$DEPLOY_ENV"
+
           scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:/home/$SSH_USERNAME_1/backend-$DEPLOY_ENV/
+
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
             cd /home/$SSH_USERNAME_1/backend-$DEPLOY_ENV
             sudo apt update
@@ -61,10 +68,9 @@ jobs:
           SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY_1 }}
           SSH_USERNAME_1: ${{ secrets.SSH_USERNAME_1 }}
           SSH_HOST_1: ${{ secrets.SSH_HOST_1 }}
-        run: |
+        run: >
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
+
           chmod 600 private_key.pem
-        # Determine current active environment
-          
 
-
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
