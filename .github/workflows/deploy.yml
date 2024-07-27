@@ -62,7 +62,7 @@ jobs:
               exit 1
             fi
             if [ -f index.js ]; then
-              # pm2 stop backend-$DEPLOY_ENV || true
+              pm2 stop backend-$DEPLOY_ENV || true
               pm2 start index.js --name backend-$DEPLOY_ENV --watch -f
               # pm2 restart index.js --name backend-$DEPLOY_ENV --watch -f
             else
@@ -103,10 +103,14 @@ jobs:
           # Apply Nginx configuration 
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
-            sudo sed -i "s|{{ACTIVE_ENV}}|$NEW_ENV|g" /tmp/nginx.conf
+            sudo sed -i "s|backend-{{ACTIVE_ENV}}|backend-$NEW_ENV|g" /tmp/nginx.conf
             sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
             sudo nginx -t
             sudo systemctl reload nginx
           EOF
-     
+      - name: Test Deployment
+        env:
+          SSH_HOST_1: ${{ secrets.SSH_HOST_1 }}
+        run: |
+          curl -f http://$SSH_HOST_1/sayHello || (echo "Deployment failed!" && exit 1)
