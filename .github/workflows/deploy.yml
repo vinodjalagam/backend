@@ -97,8 +97,10 @@ jobs:
 
           echo "Switching to: $NEW_ENV"
 
+
           export ACTIVE_ENV=$NEW_ENV
-          envsubst '${NEW_ENV}' < default.template > /tmp/default.template
+          
+          envsubst '${ACTIVE_ENV}' < default.template > /tmp/default.template
 
           # ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'ls -l /home/$SSH_USERNAME_1/backend-blue'
 
