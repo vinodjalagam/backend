@@ -65,15 +65,6 @@ jobs:
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
           chmod 600 private_key.pem
         # Determine current active environment
-          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
-          # Determine non-active environment
-          if [ "$ACTIVE_ENV" == "blue" ]; then
-            NEW_ENV="green"
-          else
-            NEW_ENV="blue"
-          fi
-
-          # Upload Nginx configuration
-          scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
+          
 
 
