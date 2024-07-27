@@ -22,7 +22,7 @@ jobs:
           ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
       - name: Deploy to Blue Environment
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
         run: >
