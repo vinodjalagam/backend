@@ -1,11 +1,9 @@
-upstream backend-blue {
-    server 127.0.0.1:8085;
-
-}
-
-upstream backend-green {
+upstream backend-blue-green {
+    server 127.0.0.1:8085; 
     server 127.0.0.1:8086;
+
 }
+
 
 server {
     listen 80;
