@@ -69,7 +69,7 @@ jobs:
           SSH_USERNAME_1: ${{ secrets.USERNAME }}
           SSH_HOST_1: ${{ secrets.HOST }}
         run: >
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          echo "$SSH_PRIVATE_KEY_1" > private_key.pem
 
           chmod 600 private_key.pem
 
