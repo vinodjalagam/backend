@@ -103,7 +103,7 @@ jobs:
           # Apply Nginx configuration 
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
-            sudo sed -i "s|backend-{{ACTIVE_ENV}}|backend-$NEW_ENV|g" /tmp/nginx.conf
+            sudo sed -i "s|backend-$ACTIVE_ENV|backend-$NEW_ENV|g" /tmp/nginx.conf
             sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
             sudo nginx -t
