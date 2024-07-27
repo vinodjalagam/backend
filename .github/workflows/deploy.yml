@@ -17,12 +17,11 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: >
-          # sudo apt-get update
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
-          docker build -t  vinodjalagam/my-node-app4:latest .
+          docker build -t vinodjalagam/my-node-app4:latest .
 
-          docker push  vinodjalagam/my-node-app4:latest
+          docker push vinodjalagam/my-node-app4:latest
       - name: Add SSH host key
         run: |
           mkdir -p ~/.ssh
@@ -49,11 +48,13 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
-        run: |
+        run: >
           echo "$SSH_PRIVATE_KEY" > private_key.pem
+
           chmod 600 private_key.pem
+
           ssh -i private_key.pem $USERNAME@$HOST << 'EOF'
-            sudo sed -i 's/8082/8081/' /etc/nginx/sites-available/default
+            sudo sed -i 's/# server 127.0.0.1:8082;/server 127.0.0.1:8081;/; s/server 127.0.0.1:8081;/# server 127.0.0.1:8082;/g' /etc/nginx/sites-available/default
             sudo systemctl restart nginx
           EOF
       - name: Verify traffic switch to Blue
