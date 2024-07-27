@@ -65,9 +65,9 @@ jobs:
           EOF
       - name: Configure Nginx
         env:
-          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY_1 }}
-          SSH_USERNAME_1: ${{ secrets.SSH_USERNAME_1 }}
-          SSH_HOST_1: ${{ secrets.SSH_HOST_1 }}
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USERNAME_1: ${{ secrets.USERNAME }}
+          SSH_HOST_1: ${{ secrets.HOST }}
         run: >
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
 
