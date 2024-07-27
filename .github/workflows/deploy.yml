@@ -43,7 +43,8 @@ jobs:
           else
             DEPLOY_ENV="blue"
           fi
-          echo "Deploying to: $DEPLOY_ENV"
+          
+          echo "Deploying to: $DEPLOY_ENV
 
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "mkdir -p /home/$SSH_USERNAME_1/backend-$DEPLOY_ENV"
