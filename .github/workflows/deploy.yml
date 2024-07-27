@@ -78,9 +78,9 @@ jobs:
           echo "Active environment: $ACTIVE_ENV"
           # Determine non-active environment 
           if [ "$ACTIVE_ENV" == "blue" ]; then
-              NEW_ENV="green"
+            NEW_ENV="green"
           else
-              NEW_ENV="blue"
+            NEW_ENV="blue"
           fi
 
           # # Upload Nginx configuration 
