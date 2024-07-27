@@ -64,7 +64,7 @@ jobs:
             if [ -f index.js ]; then
               # pm2 stop backend-$DEPLOY_ENV || true
               pm2 start index.js --name backend-$DEPLOY_ENV --watch -f
-              pm2 restart index.js --name backend-$DEPLOY_ENV --watch -f
+              # pm2 restart index.js --name backend-$DEPLOY_ENV --watch -f
             else
               echo "index.js not found!"
               exit 1
