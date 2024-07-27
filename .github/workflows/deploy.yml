@@ -95,6 +95,8 @@ jobs:
           else
             NEW_ENV="blue"
           fi
+          
+          
           echo "Switching to: $NEW_ENV"
 
 
