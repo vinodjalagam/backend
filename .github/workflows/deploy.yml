@@ -49,15 +49,11 @@ jobs:
             sudo apt install npm -y
             sudo npm install -g pm2
             # Ensure the package.json file is present
-            if [ -f /home/$USERNAME/backend-blue/package.json ]; then
-              npm install
-            else
-              echo "package.json not found!"
-              exit 1
-            fi
+            npm install
+            
 
             # Check if index.js exists
-            if [ -f /home/$USERNAME/backend-blue/index.js ]; then
+            if [ -f index.js ]; then
               pm2 start index.js --name backend-blue --port 8081
             else
               echo "index.js not found!"
