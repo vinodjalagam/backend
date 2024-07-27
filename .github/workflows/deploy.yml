@@ -51,7 +51,9 @@ jobs:
             sudo apt update
             sudo apt install docker.io -y
             sudo usermod -aG docker $USERNAME
-            newgrp docker
+            newgrp docker 
+            docker login ${{ secrets.DOCKER_USERNAME }} 
+            
             docker pull $DOCKER_USERNAME/backend-blue:latest
             docker stop backend-blue || true
             docker rm backend-blue || true
