@@ -97,10 +97,10 @@ jobs:
 
           echo "Switching to: $NEW_ENV"
 
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'ls -l /home/$SSH_USERNAME_1/backend-blue'
+          # ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'ls -l /home/$SSH_USERNAME_1/backend-blue'
 
 
-          scp -i private_key.pem /home/$SSH_USERNAME_1/backend-blue/default.template $SSH_USERNAME_1@$SSH_HOST_1:/tmp/default.template
+          scp -i private_key.pem default.template $SSH_USERNAME_1@$SSH_HOST_1:/tmp/default.template
 
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
