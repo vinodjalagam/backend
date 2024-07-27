@@ -98,7 +98,7 @@ jobs:
           echo "Switching to: $NEW_ENV"
 
 
-          scp -i private_key.pem /etc/nginx/sites-available/default.template $SSH_USERNAME_1@$SSH_HOST_1:/tmp/default.template
+          scp -i private_key.pem /etc/nginx/sites-available/default $SSH_USERNAME_1@$SSH_HOST_1:/tmp/default.template
 
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
