@@ -77,13 +77,13 @@ jobs:
               echo "package.json not found!"
               exit 1
             fi
-            # if [ -f index.js ]; then
-            #   pm2 stop $DEPLOY_DIR || true
-            #   pm2 start index.js --name $DEPLOY_DIR --watch -f
-            # else
-            #   echo "index.js not found!"
-            #   exit 1
-            # fi
+            if [ -f index.js ]; then
+              pm2 stop $DEPLOY_DIR || true
+              pm2 start index.js --name $DEPLOY_DIR --watch -f
+            else
+              echo "index.js not found!"
+              exit 1
+            fi
           EOF
       # - name: Configure Nginx
       #   env:
