@@ -119,6 +119,20 @@ jobs:
 
           echo "Updating Nginx configuration to point to $DEPLOY_DIR"
 
+          scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
+
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+            sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
+            sudo touch /etc/nginx/switch/$NEW_ENV
+            sudo rm -f /etc/nginx/switch/$ACTIVE_ENV
+            sudo systemctl reload nginx
+          EOF
+
+          
+
+
+          
+
       #     scp -i private_key.pem default.template $SSH_USERNAME_1@$SSH_HOST_1:/tmp/default.template
       #     ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF      
       #     export ACTIVE_ENV=$NEW_ENV
