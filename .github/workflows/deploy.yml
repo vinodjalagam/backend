@@ -123,14 +123,17 @@ jobs:
 
           echo "Updating Nginx configuration to point to $DEPLOY_DIR"
 
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "sudo mkdir -p /etc/nginx/sites-available /etc/nginx/switch"
-
           scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
+
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "sudo mkdir -p /etc/nginx/sites-available /etc/nginx/switch"
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
             # sudo mkdir -p /etc/nginx/sites-available
             # sudo mkdir -p /etc/nginx/switch
             sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
+            sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+            sudo nginx -t
+            sudo systemctl start nginx
             sudo touch /etc/nginx/switch/$NEW_ENV
             sudo rm -f /etc/nginx/switch/$ACTIVE_ENV
             sudo systemctl reload nginx
