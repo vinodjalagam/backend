@@ -10,7 +10,7 @@ upstream backend-green {
 
 server {
     listen 80;
-    server_name 3.89.70.192;
+    server_name 107.21.199.44;
 
     location /sayHello {
         proxy_pass http://backend-${ACTIVE_ENV}/sayHello;
