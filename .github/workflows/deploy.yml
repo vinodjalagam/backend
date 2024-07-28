@@ -107,6 +107,7 @@ jobs:
 
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF 
+          sudo systemctl start nginx
           
           #export ACTIVE_ENV=$NEW_ENV
 
