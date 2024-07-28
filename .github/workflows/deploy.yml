@@ -120,6 +120,8 @@ jobs:
             sudo touch /etc/nginx/switch/$NEW_ENV
             sudo rm -f /etc/nginx/switch/$ACTIVE_ENV
             sudo nginx -t
+            sudo systemctl start nginx
+            sudo systemctl status nginx
             sudo systemctl reload nginx
           EOF
       - name: Verify Deployment
