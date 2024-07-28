@@ -104,13 +104,11 @@ jobs:
           SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_USERNAME_1: ${{ secrets.USERNAME }}
           SSH_HOST_1: ${{ secrets.HOST }}
-        run: >
+        run: |
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
-
           chmod 600 private_key.pem
 
           ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
-
           echo "Active environment: $ACTIVE_ENV"
 
           if [ "$ACTIVE_ENV" = "blue" ]; then
@@ -132,7 +130,15 @@ jobs:
             sudo nginx -t
             sudo systemctl reload nginx
           EOF
-          
+      # - name: Health Check New Environment
+      #   run: |
+      #         NEW_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "green"; else echo "blue"; fi')
+      #         echo "New environment: $NEW_ENV"
+      #         if [ "$NEW_ENV" = "green" ]; then
+      #           curl -f http://localhost:3002/sayHello || exit 1
+      #         else
+      #           curl -f http://localhost:3001/sayHello || exit 1
+      #         fi
           
 
           
