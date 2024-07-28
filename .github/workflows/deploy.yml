@@ -47,9 +47,7 @@ jobs:
 
           echo "Deploying to $DEPLOY_DIR"
 
-          mkdir -p $DEPLOY_DIR
-
-          cd $DEPLOY_DIR
+          sudo mkdir -p $DEPLOY_DIR
 
           EOF
 
@@ -59,8 +57,6 @@ jobs:
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "cd $DEPLOY_DIR && echo 'Deployment steps go here'"
 
-     
-     
 
           # if [ "$ACTIVE_ENV" == "blue" ]; then
           #   DEPLOY_ENV="green"
