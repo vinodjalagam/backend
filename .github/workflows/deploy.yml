@@ -45,12 +45,12 @@ jobs:
 
           echo "Deploying to $DEPLOY_DIR"
 
-          mkdir -p $DEPLOY_DIR
-          cd $DEPLOY_DIR
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1  "mkdir -p /home/$SSH_USERNAME_1/backend-$DEPLOY_DIR"
+
+          cd /home/$SSH_USERNAME_1/$DEPLOY_DIR
 
           EOF 
           
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "mkdir -p /home/$SSH_USERNAME_1/backend-$DEPLOY_DIR"
       - name: Debugging
         run: |
           echo "SSH_USERNAME_1: $SSH_USERNAME_1"
