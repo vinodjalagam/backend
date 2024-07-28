@@ -38,36 +38,32 @@ jobs:
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
 
           chmod 600 private_key.pem
-
-
           # Determine active environment
-
+         
           ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
-
+          
           echo "Active environment: $ACTIVE_ENV"
-
-
+          
           if [ "$ACTIVE_ENV" = "blue" ]; then
+          
             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
+          
           else
+          
             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
+          
           fi
-
-
+          
           echo "Deploying to $DEPLOY_DIR"
-
-
           # Create deployment directory on the remote server
-
+          
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "sudo mkdir -p $DEPLOY_DIR && sudo chown $SSH_USERNAME_1:$SSH_USERNAME_1 $DEPLOY_DIR"
-
-
           # Deploy code to the determined directory
-
+          
+          
           scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:$DEPLOY_DIR/
-
           # Execute deployment steps
-
+          
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
             cd $DEPLOY_DIR
             echo 'Deployment steps go here'
@@ -95,10 +91,14 @@ jobs:
       - name: Health Check New Environment
         run: |
           NEW_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "green"; else echo "blue"; fi')
+          
+          
+          echo "New environment: $NEW_ENV"
+          
           if [ "$NEW_ENV" = "green" ]; then
-            curl -f http://$SSH_HOST_1:8086/sayHello || exit 1
+            curl -f http://localhost:8086/sayHello || exit 1
           else
-            curl -f http://$SSH_HOST_1:8085/sayHello || exit 1
+            curl -f http://localhost:8085/sayHello || exit 1
           fi
       - name: Configure Nginx
         env:
@@ -110,12 +110,9 @@ jobs:
 
           chmod 600 private_key.pem
 
-
           ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
 
-
           echo "Active environment: $ACTIVE_ENV"
-
 
           if [ "$ACTIVE_ENV" = "blue" ]; then
              NEW_ENV="green"
