@@ -31,7 +31,7 @@ jobs:
           chmod 600 private_key.pem
 
 
-          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
 
           echo "ACTIVE_ENV=$ACTIVE_ENV" >> $GITHUB_ENV
 
@@ -82,20 +82,26 @@ jobs:
           chmod 600 private_key.pem
 
 
-          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
 
-          # echo "ACTIVE_ENV=$ACTIVE_ENV" >> $GITHUB_ENV
+          echo "ACTIVE_ENV=$ACTIVE_ENV" >> $GITHUB_ENV
 
           echo "Active environment: $ACTIVE_ENV"
 
 
           if [ "$ACTIVE_ENV" == "blue" ]; then
+          
             NEW_ENV="green"
+            
           else
+          
             NEW_ENV="blue"
+
           fi
 
           echo "Switching to: $NEW_ENV"
+
+          sed -i 's/\$ACTIVE_ENV/$NEW_ENV/g' /tmp/default.template
 
 
 
@@ -114,7 +120,7 @@ jobs:
           #envsubst '\$ACTIVE_ENV' < /tmp/default.template > /etc/nginx/sites-available/default
             
             # envsubst '\$ACTIVE_ENV'  /tmp/default.template > /etc/nginx/sites-available/default
-            sed -i 's/\$ACTIVE_ENV/$NEW_ENV/g' /tmp/default.template
+            
             sudo cp /tmp/default.template /etc/nginx/sites-available/default
 
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
