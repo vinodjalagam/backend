@@ -42,6 +42,11 @@ jobs:
             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
           fi
 
+          echo "Deploying to $DEPLOY_DIR"
+          mkdir -p $DEPLOY_DIR
+          cd $DEPLOY_DIR
+          EOF
+
           
 
           # if [ "$ACTIVE_ENV" == "blue" ]; then
