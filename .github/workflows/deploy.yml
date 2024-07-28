@@ -32,8 +32,17 @@ jobs:
 
 
           ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
-
+          
           echo "Active environment: $ACTIVE_ENV"
+
+          # ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+          # if [ "$ACTIVE_ENV" = "blue" ]; then
+          #   DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
+          # else
+          #   DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
+          # fi
+
+          
 
           # if [ "$ACTIVE_ENV" == "blue" ]; then
           #   DEPLOY_ENV="green"
