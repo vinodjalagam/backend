@@ -101,26 +101,14 @@ jobs:
 
           echo "Switching to: $NEW_ENV"
 
-          sed -i 's/\$ACTIVE_ENV/$NEW_ENV/g' /tmp/default.template
-
-
-
-
-          # ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'ls -l /home/$SSH_USERNAME_1/backend-blue'
-
-
           scp -i private_key.pem default.template $SSH_USERNAME_1@$SSH_HOST_1:/tmp/default.template
-
-
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF 
-          
-          
-          #export ACTIVE_ENV=$NEW_ENV
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF      
+          export ACTIVE_ENV=$NEW_ENV
 
           #envsubst '\$ACTIVE_ENV' < /tmp/default.template > /etc/nginx/sites-available/default
             
             # envsubst '\$ACTIVE_ENV'  /tmp/default.template > /etc/nginx/sites-available/default
-            
+            sed -i 's/\$ACTIVE_ENV/$NEW_ENV/g' /tmp/default.template
             sudo cp /tmp/default.template /etc/nginx/sites-available/default
 
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
