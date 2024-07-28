@@ -35,7 +35,8 @@ jobs:
 
           echo "Active environment: $ACTIVE_ENV"
 
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 
+
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << 'EOF'
 
           if [ "$ACTIVE_ENV" = "blue" ]; then
             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
@@ -43,15 +44,21 @@ jobs:
             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
           fi
 
+
           echo "Deploying to $DEPLOY_DIR"
 
-          sudo mkdir -p /home/$SSH_USERNAME_1/$DEPLOY_DIR
+          mkdir -p $DEPLOY_DIR
+
+          cd $DEPLOY_DIR
+
+          EOF
+
 
           scp -i private_key.pem -r * $SSH_USERNAME_1@$SSH_HOST_1:$DEPLOY_DIR
 
 
-          cd /home/$SSH_USERNAME_1/$DEPLOY_DIR
-          echo "Deployment steps go here"
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "cd $DEPLOY_DIR && echo 'Deployment steps go here'"
+
      
      
 
