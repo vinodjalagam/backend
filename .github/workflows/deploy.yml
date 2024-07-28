@@ -54,7 +54,7 @@ jobs:
 
           # Create deployment directory on the remote server
 
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "sudo mkdir -p $DEPLOY_DIR"
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "sudo mkdir -p $DEPLOY_DIR && sudo chown $SSH_USERNAME_1:$SSH_USERNAME_1 $DEPLOY_DIR"
 
 
           # Deploy code to the determined directory
