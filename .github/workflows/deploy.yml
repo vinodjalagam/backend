@@ -131,7 +131,7 @@ jobs:
           echo "New environment: $NEW_ENV"
 
           if [ "$NEW_ENV" = "green" ]; then
-            curl -f http://localhost:3002/sayHello || exit 1
+            curl -f http://localhost:8085/sayHello || exit 1
           else
-            curl -f http://localhost:3001/sayHello || exit 1
+            curl -f http://localhost:8086/sayHello || exit 1
           fi
