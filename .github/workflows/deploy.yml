@@ -59,7 +59,7 @@ jobs:
 
           # Deploy code to the determined directory
 
-          scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:$DEPLOY_DIR
+          scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:$DEPLOY_DIR/
 
 
           # Execute deployment steps
