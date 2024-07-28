@@ -85,15 +85,15 @@ jobs:
               exit 1
             fi
           EOF
-      # - name: Configure Nginx
-      #   env:
-      #     SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     SSH_USERNAME_1: ${{ secrets.USERNAME }}
-      #     SSH_HOST_1: ${{ secrets.HOST }}
-      #   run: >
-      #     echo "$SSH_PRIVATE_KEY_1" > private_key.pem
+      - name: Configure Nginx
+        env:
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USERNAME_1: ${{ secrets.USERNAME }}
+          SSH_HOST_1: ${{ secrets.HOST }}
+        run: >
+          echo "$SSH_PRIVATE_KEY_1" > private_key.pem
 
-      #     chmod 600 private_key.pem
+          chmod 600 private_key.pem
 
 
       #     ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
