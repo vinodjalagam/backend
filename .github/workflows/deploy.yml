@@ -123,7 +123,6 @@ jobs:
             sudo systemctl reload nginx
           EOF
       - name: Health Check New Environment
-      - name: Verify Deployment
         env:
             SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
             SSH_USERNAME_1: ${{ secrets.USERNAME }}
