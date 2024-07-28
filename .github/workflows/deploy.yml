@@ -35,7 +35,7 @@ jobs:
 
           # Determine active environment
 
-          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
 
           echo "Active environment: $ACTIVE_ENV"
 
