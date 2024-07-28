@@ -102,17 +102,15 @@ jobs:
           echo "Active environment: $ACTIVE_ENV"
 
 
-      #     if [ "$ACTIVE_ENV" == "blue" ]; then
-          
-      #       NEW_ENV="green"
-            
-      #     else
-          
-      #       NEW_ENV="blue"
+          if [ "$ACTIVE_ENV" = "blue" ]; then
+             NEW_ENV="green"
+             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
+          else
+             NEW_ENV="blue"
+             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
+          fi
 
-      #     fi
-
-      #     echo "Switching to: $NEW_ENV"
+          echo "Updating Nginx configuration to point to $DEPLOY_DIR"
 
       #     scp -i private_key.pem default.template $SSH_USERNAME_1@$SSH_HOST_1:/tmp/default.template
       #     ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF      
