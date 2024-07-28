@@ -1,16 +1,19 @@
-upstream backend-blue-green {
+upstream backend-blue {
     server 127.0.0.1:8085; 
-    server 127.0.0.1:8086;
 
+
+}
+upstream backend-green {
+    server 127.0.0.1:8086;
 }
 
 
 server {
     listen 80;
-    server_name your_server_name;
+    server_name 3.89.70.192;
 
     location /sayHello {
-        proxy_pass http://backend-blue-green/sayHello;
+        proxy_pass http://backend-${ACTIVE_ENV}/sayHello;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
