@@ -67,23 +67,23 @@ jobs:
           EOF
 
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
-            cd /home/$SSH_USERNAME_1/$DEPLOY_DIR
-            sudo apt update
+            cd $DEPLOY_DIR
+            sudo apt update -y
             sudo apt install npm -y
             sudo npm install -g pm2 -y
             if [ -f package.json ]; then
-              npm install
+              npm install -y
             else
               echo "package.json not found!"
               exit 1
             fi
-            if [ -f index.js ]; then
-              pm2 stop $DEPLOY_DIR || true
-              pm2 start index.js --name $DEPLOY_DIR --watch -f
-            else
-              echo "index.js not found!"
-              exit 1
-            fi
+            # if [ -f index.js ]; then
+            #   pm2 stop $DEPLOY_DIR || true
+            #   pm2 start index.js --name $DEPLOY_DIR --watch -f
+            # else
+            #   echo "index.js not found!"
+            #   exit 1
+            # fi
           EOF
       # - name: Configure Nginx
       #   env:
