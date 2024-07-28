@@ -47,7 +47,7 @@ jobs:
           # sudo mkdir -p $DEPLOY_DIR
 
           # EOF
-          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "mkdir -p /home/$SSH_USERNAME_1/$DEPLOY_DIR"
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 " sudo mkdir -p /home/$SSH_USERNAME_1/$DEPLOY_DIR"
 
           scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:/home/$SSH_USERNAME_1/$DEPLOY_DIR/
 
