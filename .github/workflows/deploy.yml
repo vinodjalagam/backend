@@ -31,7 +31,7 @@ jobs:
           chmod 600 private_key.pem
 
 
-          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-blue ]; then echo "blue"; else echo "green"; fi')
 
           echo "Active environment: $ACTIVE_ENV"
 
@@ -45,16 +45,15 @@ jobs:
 
           echo "Deploying to $DEPLOY_DIR"
 
-          sudo mkdir -p /home/$SSH_USERNAME_1/backend-$DEPLOY_DIR
+          sudo mkdir -p /home/$SSH_USERNAME_1/$DEPLOY_DIR
 
-          cd /home/$SSH_USERNAME_1/backend-$DEPLOY_DIR
+          scp -i private_key.pem -r * $SSH_USERNAME_1@$SSH_HOST_1:$DEPLOY_DIR
+
+
+          cd /home/$SSH_USERNAME_1/$DEPLOY_DIR
+          echo "Deployment steps go here"
      
-      - name: Debugging
-        run: |
-          echo "SSH_USERNAME_1: $SSH_USERNAME_1"
-          echo "SSH_HOST_1: $SSH_HOST_1"
-
-          
+     
 
           # if [ "$ACTIVE_ENV" == "blue" ]; then
           #   DEPLOY_ENV="green"
