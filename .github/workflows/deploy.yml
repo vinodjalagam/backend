@@ -152,15 +152,15 @@ jobs:
       
           echo "Checking service status on port $SERVICE_PORT"
       
-          # ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
-          #   sudo apt install -y net-tools || true
-          #   sudo netstat -tuln | grep :$SERVICE_PORT
-          #   if [ $? -ne 0 ]; then
-          #        echo "Service is not running on port $SERVICE_PORT"
-          #        exit 1
-          #   fi
-          # EOF
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+            sudo apt install -y net-tools || true
+            sudo netstat -tuln | grep :$SERVICE_PORT
+            if [ $? -ne 0 ]; then
+                 echo "Service is not running on port $SERVICE_PORT"
+                 exit 1
+            fi
+          EOF
       
-          # echo "Service is running on port $SERVICE_PORT, running curl command"
+          echo "Service is running on port $SERVICE_PORT, running curl command"
       
-          # curl -f http://$SSH_HOST_1:$SERVICE_PORT/sayHello || exit 1
+          curl -f http://$SSH_HOST_1:$SERVICE_PORT/sayHello || exit 1
