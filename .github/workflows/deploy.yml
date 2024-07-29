@@ -55,64 +55,64 @@ jobs:
 
           echo "Deploying to $DEPLOY_DIR" # Create deployment directory on the remote server
 
-      #     ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "sudo mkdir -p $DEPLOY_DIR && sudo chown $SSH_USERNAME_1:$SSH_USERNAME_1 $DEPLOY_DIR" # Deploy code to the determined directory
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 "sudo mkdir -p $DEPLOY_DIR && sudo chown $SSH_USERNAME_1:$SSH_USERNAME_1 $DEPLOY_DIR" # Deploy code to the determined directory
 
 
-      #     scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:$DEPLOY_DIR/ # Execute deployment steps
+          scp -i private_key.pem -r ./* $SSH_USERNAME_1@$SSH_HOST_1:$DEPLOY_DIR/ # Execute deployment steps
 
-      #     ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
-      #       cd $DEPLOY_DIR
-      #       echo 'Deployment steps go here'
-      #     EOF
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+            cd $DEPLOY_DIR
+            echo 'Deployment steps go here'
+          EOF
 
-      #     ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
-      #       cd $DEPLOY_DIR
-      #       sudo apt update -y
-      #       sudo apt install npm -y
-      #       sudo npm install -g pm2 -y
-      #       if [ -f package.json ]; then
-      #         npm install -y
-      #       else
-      #         echo "package.json not found!"
-      #         exit 1
-      #       fi
-      #       if [ -f index.js ]; then
-      #         pm2 stop $DEPLOY_DIR || true
-      #         pm2 start index.js --name $DEPLOY_DIR --watch -f
-      #       else
-      #         echo "index.js not found!"
-      #         exit 1
-      #       fi
-      #     EOF
-      # - name: Configure Nginx
-      #   env:
-      #     SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     SSH_USERNAME_1: ${{ secrets.USERNAME }}
-      #     SSH_HOST_1: ${{ secrets.HOST }}
-      #   run: >
-      #     echo "$SSH_PRIVATE_KEY_1" > private_key.pem
+          ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
+            cd $DEPLOY_DIR
+            sudo apt update -y
+            sudo apt install npm -y
+            sudo npm install -g pm2 -y
+            if [ -f package.json ]; then
+              npm install -y
+            else
+              echo "package.json not found!"
+              exit 1
+            fi
+            if [ -f index.js ]; then
+              pm2 stop $DEPLOY_DIR || true
+              pm2 start index.js --name $DEPLOY_DIR --watch -f
+            else
+              echo "index.js not found!"
+              exit 1
+            fi
+          EOF
+      - name: Configure Nginx
+        env:
+          SSH_PRIVATE_KEY_1: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USERNAME_1: ${{ secrets.USERNAME }}
+          SSH_HOST_1: ${{ secrets.HOST }}
+        run: >
+          echo "$SSH_PRIVATE_KEY_1" > private_key.pem
 
-      #     chmod 600 private_key.pem
-
-
-      #     ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
-
-      #     echo "Active environment: $ACTIVE_ENV"
+          chmod 600 private_key.pem
 
 
-      #     if [ "$ACTIVE_ENV" = "blue" ]; then
-      #        NEW_ENV="green"
-      #        DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
-      #        SERVICE_PORT=8085
+          ACTIVE_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/$SSH_USERNAME_1/backend-green ]; then echo "blue"; else echo "green"; fi')
 
-      #     else
-      #        NEW_ENV="blue"
-      #        DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
-      #        SERVICE_PORT=8086
+          echo "Active environment: $ACTIVE_ENV"
 
-      #     fi
 
-      #     echo "Checking service status on port $SERVICE_PORT"
+          if [ "$ACTIVE_ENV" = "blue" ]; then
+             NEW_ENV="green"
+             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
+             SERVICE_PORT=8085
+
+          else
+             NEW_ENV="blue"
+             DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
+             SERVICE_PORT=8086
+
+          fi
+
+          echo "Checking service status on port $SERVICE_PORT"
       #     echo "Updating Nginx configuration to point to $DEPLOY_DIR"
 
       #     scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
