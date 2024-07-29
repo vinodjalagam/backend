@@ -103,9 +103,13 @@ jobs:
           if [ "$ACTIVE_ENV" = "blue" ]; then
              NEW_ENV="green"
              DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
+             SERVICE_PORT=8085
+
           else
              NEW_ENV="blue"
              DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-blue"
+             SERVICE_PORT=8086
+
           fi
 
 
