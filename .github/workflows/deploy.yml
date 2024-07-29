@@ -112,7 +112,7 @@ jobs:
 
           fi
 
-
+          echo "Checking service status on port $SERVICE_PORT"
           echo "Updating Nginx configuration to point to $DEPLOY_DIR"
 
           scp -i private_key.pem nginx.conf $SSH_USERNAME_1@$SSH_HOST_1:/tmp/nginx.conf
