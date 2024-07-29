@@ -120,15 +120,16 @@ jobs:
           ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 << EOF
             sudo mkdir -p /etc/nginx/switch
             sudo export $SERVICE_PORT
-            sudo sed -i 's|{{SERVICE_PORT}}|$SERVICE_PORT|g' /tmp/nginx.conf
+            sudo sed -i "s|{{SERVICE_PORT}}|$SERVICE_PORT|g" /tmp/nginx.conf
             sudo mv /tmp/nginx.conf /etc/nginx/sites-available/default
             sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-            sudo touch /etc/nginx/switch/$NEW_ENV
-            sudo rm -f /etc/nginx/switch/$ACTIVE_ENV
+            # sudo touch /etc/nginx/switch/$NEW_ENV
+            # sudo rm -f /etc/nginx/switch/$ACTIVE_ENV
             sudo nginx -t
             sudo systemctl start nginx
-            sudo systemctl status nginx
+            # sudo systemctl status nginx
             sudo systemctl reload nginx
+            sudo nginx -s reload
           EOF
       - name: Verify Deployment
         env:
