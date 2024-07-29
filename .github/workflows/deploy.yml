@@ -142,7 +142,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY_1" > private_key.pem
           chmod 600 private_key.pem
       
-          NEW_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/'$SSH_USERNAME_1'/backend-blue ]; then echo "green"; else echo "blue"; fi')
+          NEW_ENV=$(ssh -i private_key.pem $SSH_USERNAME_1@$SSH_HOST_1 'if [ -d /home/'$SSH_USERNAME_1'/backend-green ]; then echo "green"; else echo "blue"; fi')
           echo "New environment: $NEW_ENV"
       
           if [ "$NEW_ENV" = "green" ]; then
