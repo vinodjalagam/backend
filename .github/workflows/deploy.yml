@@ -101,7 +101,7 @@ jobs:
           echo "Active environment: $ACTIVE_ENV"
 
 
-          if [ "$ACTIVE_ENV" = "blue" ]; then
+          if [ "$ACTIVE_ENV" = "green" ]; then
              NEW_ENV="green"
              DEPLOY_DIR="/home/$SSH_USERNAME_1/backend-green"
              SERVICE_PORT=8085
